@@ -4,11 +4,19 @@ uuidv4();
 
 console.log("factories file called !...");
 
-const createUser = ({ name = "" } = {}) => ({
+const createUser = ({ name = "", socketId = null, playing = false, online = false } = {}) => ({
     id: uuidv4(),
-    name
+    name,
+    socketId,
+    playing,
+    online,
+})
+
+const userList = ({} = {}) => ({
+    id: 'nhi pta'
 })
 
 module.exports = {
-    createUser
+    createUser,
+    userList
 }

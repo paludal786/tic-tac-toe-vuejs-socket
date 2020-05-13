@@ -1,10 +1,12 @@
 const io = require('./index.js').io
 
-const { VERIFY_USER, USER_CONNECTED, LOGOUT, USER_DISCONNECTED } = require('./Event')
+const { SET_MOVE, VERIFY_USER, USER_CONNECTED, LOGOUT, USER_DISCONNECTED, USER_SIGNOUT, SEND_NOTIFICATION, RECEIVED_NOTIFICATION, USER_LIST, PRIVATE_ROOM } = require('./Event')
 
 const { createUser } = require('./Factories')
 
 let connectedUsers = {}
+
+let getUsersList = {}
 
 
 module.exports = function(socket) {
@@ -18,18 +20,22 @@ module.exports = function(socket) {
         if (isUser(connectedUsers, nickname)) {
             callback({ isUser: true, user: null })
         } else {
-            callback({ isUser: false, user: createUser({ name: nickname }) })
+            callback({ isUser: false, user: createUser({ name: nickname, socketId: socket.id, online: true }) })
         }
     })
 
+    // socket.on(USER_LIST, (callback) => {
+    //     callback({ list: connectedUsers })
+    // })
+
     //connect new user with username
     socket.on(USER_CONNECTED, (user) => {
+        user.socketId = socket.id
         connectedUsers = addUser(connectedUsers, user)
         socket.user = user;
-        io.emit(USER_CONNECTED, connectedUsers);
+        io.emit(USER_CONNECTED, connectedUsers); // emit all users
         console.log(connectedUsers, 'all connected users');
     })
-
 
     //User disconnects
     socket.on('disconnect', () => {
@@ -44,7 +50,23 @@ module.exports = function(socket) {
     socket.on(LOGOUT, (user) => {
         connectedUsers = removeUser(connectedUsers, user.name)
         io.emit(USER_DISCONNECTED, connectedUsers)
+        io.emit(USER_SIGNOUT, user)
         console.log("Disconnect User Name", connectedUsers);
+    })
+
+    socket.on(SEND_NOTIFICATION, (user, currentUser) => {
+        // console.log(user, currentUser);
+        io.emit(RECEIVED_NOTIFICATION, user, currentUser);
+    })
+
+    socket.on(PRIVATE_ROOM, (sender, receiver, showBoard, showUsers) => {
+        console.log(typeof(sender));
+        io.emit(PRIVATE_ROOM, sender, receiver, showBoard, showUsers);
+    })
+
+    socket.on(SET_MOVE, (x, player) => {
+        console.log(x, player);
+        io.emit(SET_MOVE, x, player);
     })
 }
 
@@ -54,6 +76,7 @@ function addUser(userList, user) {
     newList[user.name] = user
     return newList
 }
+
 
 function removeUser(userList, username) {
     console.log(userList, username);

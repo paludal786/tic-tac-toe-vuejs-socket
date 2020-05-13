@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <Layout msg="Welcome to Your Vue.js App"/>
+  <div id="app" class="container">
+    <Layout title="Welcome to Socket World"/>
   </div>
 </template>
 

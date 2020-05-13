@@ -1,11 +1,10 @@
 <template>
   <div>
-          
+      <!-- <h3>{{ title }}</h3> -->
       <div v-if="Object.keys(this.user).length == 0">
         <login-form v-bind:socket="socket" @submit="setUser"></login-form>
       </div>
       <div v-else>
-        <p>Login</p>
         <game-board v-bind:socket="socket" v-bind:user="user" @logoutEvent="logout"></game-board>
       </div>
   </div>
@@ -49,7 +48,7 @@ export default {
     },
     setUser: function (user){
       const socket = io(socketUrl)
-      socket.emit(USER_CONNECTED,user);
+      socket.emit(USER_CONNECTED,user); // user data goes here to server (sender)
       this.user = user;
     },
     logout:function(user){
