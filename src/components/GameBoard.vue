@@ -95,6 +95,10 @@ export default {
             let socket = this.$props.socket;
             this.showUsers = false;
             this.showBoard = true;
+            this.receiver.playing = true;
+            sender.playing = true;
+            console.log(this.userList);
+
             socket.emit(PRIVATE_ROOM,sender,this.receiver,this.showBoard,this.showUsers);
             console.log(typeof(sender),sender,this.receiver);
         },

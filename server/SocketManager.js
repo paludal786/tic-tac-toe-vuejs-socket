@@ -8,6 +8,17 @@ let connectedUsers = {}
 
 let getUsersList = {}
 
+let cells = {
+    1: null,
+    2: null,
+    3: null,
+    4: null,
+    5: null,
+    6: null,
+    7: null,
+    8: null,
+    9: null
+}
 
 module.exports = function(socket) {
 
@@ -61,12 +72,57 @@ module.exports = function(socket) {
 
     socket.on(PRIVATE_ROOM, (sender, receiver, showBoard, showUsers) => {
         console.log(typeof(sender));
+        // connectedUsers.map()
         io.emit(PRIVATE_ROOM, sender, receiver, showBoard, showUsers);
     })
 
     socket.on(SET_MOVE, (x, player) => {
         console.log(x, player);
         io.emit(SET_MOVE, x, player);
+        cells[x] = player;
+        // console.log(cells);
+
+        console.log(cells[1], cells[2], cells[3]);
+        console.log(cells[4], cells[5], cells[6]);
+        console.log(cells[7], cells[8], cells[9]);
+
+
+        if ((cells[1] !== null) && (cells[2] !== null) && (cells[3] !== null) && (cells[1] === cells[2]) && (cells[2] === cells[3]) && (cells[1] === cells[3])) {
+            console.log("row 1 Wins");
+        }
+
+        if ((cells[4] !== null) && (cells[5] !== null) && (cells[6] !== null) && (cells[4] === cells[5]) && (cells[5] === cells[6]) && (cells[4] === cells[6])) {
+            console.log("Row 2 Wins");
+        }
+
+        if ((cells[7] !== null) && (cells[8] !== null) && (cells[9] !== null) && (cells[7] === cells[8]) && (cells[8] === cells[9]) && (cells[7] === cells[9])) {
+            console.log("Row 3 Wins");
+        }
+
+        if ((cells[1] !== null) && (cells[4] !== null) && (cells[7] !== null) && (cells[1] === cells[4]) && (cells[4] === cells[7]) && (cells[7] === cells[1])) {
+            console.log("Col 1 Wins");
+        }
+
+        if ((cells[2] !== null) && (cells[5] !== null) && (cells[8] !== null) && (cells[2] === cells[5]) && (cells[5] === cells[8]) && (cells[8] === cells[2])) {
+            console.log("Col 2 Wins");
+        }
+
+        if ((cells[3] !== null) && (cells[6] !== null) && (cells[9] !== null) && (cells[3] === cells[6]) && (cells[6] === cells[9]) && (cells[3] === cells[9])) {
+            console.log("Col 3 Wins");
+        }
+
+        if ((cells[1] !== null) && (cells[5] !== null) && (cells[9] !== null) && (cells[1] === cells[5]) && (cells[5] === cells[9]) && (cells[1] === cells[9])) {
+            console.log("Digonal 1 Wins");
+        }
+
+        if ((cells[3] !== null) && (cells[5] !== null) && (cells[7] !== null) && (cells[3] === cells[5]) && (cells[5] === cells[7]) && (cells[3] === cells[7])) {
+            console.log("Digonal 2 Wins");
+        }
+
+        if ((cells[1] !== null) && (cells[2] !== null) && (cells[3] !== null) && (cells[4] !== null) && (cells[5] !== null) && (cells[6] !== null) && (cells[7] !== null) && (cells[8] !== null) && (cells[9] !== null)) {
+            console.log("Mtach Has Been Draw !..");
+        }
+
     })
 }
 

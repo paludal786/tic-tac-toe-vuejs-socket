@@ -35,26 +35,33 @@ import { SET_MOVE } from '../../server/Event';
               console.log(poss,move);
               let position = this.$props.position;
               if (position === poss) {
-                this.mark = move
+                this.mark = move;
+                this.frozen = true;
               }
           })
       },
 			strike () {
+
+        if (!this.frozen) {
+
         let socket = this.$props.socket;
         let currentUser = this.$props.user;
         let sender = this.$props.sender;
         let receiver = this.$props.receiver;
           if (sender.name === currentUser.name) {
-            this.player1 = 'X';
-            socket.emit(SET_MOVE,this.position,this.player1);
-            this.mark = this.player1;
-            this.$emit('checkWin',this.position,this.player1)
+            this.mark = 'X';
+            // this.player1 = 'X';
+            this.frozen = true;
           }else{
-            this.player2 = 'O';
-            socket.emit(SET_MOVE,this.position,this.player2);
-            this.mark = this.player2;
-            this.$emit('checkWin',this.position,this.player2)
+            //   this.player2 = 'O';
+          //   socket.emit(SET_MOVE,this.position,this.player2);
+            this.mark = 'O';
+            this.frozen = true;
+          //   this.$emit('checkWin',this.position,this.player2)
           }
+            socket.emit(SET_MOVE,this.position,this.mark);
+            // this.$emit('checkWin',this.position,this.mark)
+        }
 			}
 		},
 	}
